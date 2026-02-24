@@ -1,15 +1,18 @@
 const NodeMediaServer = require('node-media-server');
 
+const rtmpPort = 1935;
+const httpPort = process.env.PORT || 8000;
+
 const config = {
     rtmp: {
-        port: process.env.RTMP_PORT || 1935,
+        port: (httpPort == rtmpPort) ? 1936 : rtmpPort,
         chunk_size: 60000,
         gop_cache: true,
         ping: 30,
         ping_timeout: 60
     },
     http: {
-        port: process.env.PORT || 8000,
+        port: httpPort,
         allow_origin: '*',
         mediaroot: './media',
         static: './public'

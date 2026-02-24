@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Dianpro Stream Player</title>
+    <style>
+        body { background: #0f172a; color: white; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        .container { width: 90%; max-width: 960px; background: #1e293b; padding: 20px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+        video { width: 100%; border-radius: 8px; background: black; }
+        h1 { margin-top: 0; font-size: 1.5rem; color: #38bdf8; }
+        .controls { margin-top: 15px; display: flex; gap: 10px; }
+        button { background: #0ea5e9; border: none; color: white; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        button:hover { background: #0284c7; }
+        .status { margin-top: 10px; font-size: 0.9rem; color: #94a3b8; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎥 Dianpro Live Stream</h1>
+        <video id="videoElement" controls autoplay muted></video>
+        <div class="controls">
+            <button onclick="playStream()">Reload Stream</button>
+        </div>
+        <p class="status">Kirim stream ke: <code>rtmp://YOUR_IP/live/test</code></p>
+    </div>
+
+    <script src="https://cdn.bootcdn.net/ajax/libs/mpegts.js/1.7.3/mpegts.min.js"></script>
+    <script>
+        function playStream() {
+            if (mpegts.getFeatureList().mseLivePlayback) {
+                var videoElement = document.getElementById('videoElement');
+                var player = mpegts.createPlayer({
+                    type: 'flv',  // mpegts handles flv over ws
+                    isLive: true,
+                    url: 'ws://' + window.location.host + '/live/test.flv'
+                });
+                player.attachMediaElement(videoElement);
+                player.load();
+                player.play();
+            }
+        }
+        
+        // Auto play on load
+        window.onload = playStream;
+    </script>
+</body>
+</html>

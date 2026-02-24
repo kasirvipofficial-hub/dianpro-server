@@ -10,7 +10,9 @@ const config = {
     },
     http: {
         port: process.env.PORT || 8000,
-        allow_origin: '*'
+        allow_origin: '*',
+        mediaroot: './media',
+        static: './public'
     }
 };
 

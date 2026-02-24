@@ -17,19 +17,19 @@ const config = {
         port: httpPort,
         allow_origin: '*',
         mediaroot: './media',
-        static: path.join(__dirname, 'public')
+        static: path.resolve(__dirname, 'public') // Use absolute path
     }
 };
 
-var nms = new NodeMediaServer(config)
+const nms = new NodeMediaServer(config);
 nms.run();
 
 console.log("=========================================");
 console.log("🎬 DIANPRO SERVER STATUS");
 console.log("RTMP (Video In)  : " + rtmpPort);
 console.log("HTTP (Web/Watch) : " + httpPort);
+console.log("Static Path      : " + config.http.static);
 if (httpPort === 1935) {
-    console.log("⚠️ WARNING: HTTP and RTMP were both assigned 1935.");
-    console.log("RTMP has been shifted to 1936 to prevent a crash.");
+    console.log("⚠️ WARNING: Port collision detected. RTMP shifted to 1936.");
 }
 console.log("=========================================");

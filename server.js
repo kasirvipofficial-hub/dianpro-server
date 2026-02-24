@@ -1,9 +1,20 @@
 const NodeMediaServer = require('node-media-server');
 const path = require('path');
+const fs = require('fs');
 
 const httpPort = parseInt(process.env.PORT) || 8000;
-// Force RTMP to 1935, but if HTTP is already using it, shift RTMP to 1936 to prevent crash
 const rtmpPort = (httpPort === 1935) ? 1936 : 1935;
+
+const staticPath = path.resolve(__dirname, 'public');
+const indexPath = path.join(staticPath, 'index.html');
+
+console.log("=========================================");
+console.log("🎬 DIANPRO SERVER STARTUP");
+console.log("RTMP (Video In)  : " + rtmpPort);
+console.log("HTTP (Web/Watch) : " + httpPort);
+console.log("Checking Filesystem...");
+console.log("Static Dir Exists: " + fs.existsSync(staticPath) + " (" + staticPath + ")");
+console.log("Index.html Exists: " + fs.existsSync(indexPath));
 
 const config = {
     rtmp: {
@@ -17,19 +28,14 @@ const config = {
         port: httpPort,
         allow_origin: '*',
         mediaroot: './media',
-        static: path.resolve(__dirname, 'public') // Use absolute path
+        static: staticPath
     }
 };
 
-const nms = new NodeMediaServer(config);
-nms.run();
-
-console.log("=========================================");
-console.log("🎬 DIANPRO SERVER STATUS");
-console.log("RTMP (Video In)  : " + rtmpPort);
-console.log("HTTP (Web/Watch) : " + httpPort);
-console.log("Static Path      : " + config.http.static);
 if (httpPort === 1935) {
     console.log("⚠️ WARNING: Port collision detected. RTMP shifted to 1936.");
 }
 console.log("=========================================");
+
+const nms = new NodeMediaServer(config);
+nms.run();

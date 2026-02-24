@@ -1,11 +1,14 @@
 const NodeMediaServer = require('node-media-server');
+const path = require('path');
 
-const rtmpPort = 1935;
+// Railway usually provides 'PORT' for HTTP traffic. 
+// We distinguish it from the RTMP port.
 const httpPort = process.env.PORT || 8000;
+const rtmpPort = 1935;
 
 const config = {
     rtmp: {
-        port: (httpPort == rtmpPort) ? 1936 : rtmpPort,
+        port: rtmpPort,
         chunk_size: 60000,
         gop_cache: true,
         ping: 30,
@@ -15,7 +18,7 @@ const config = {
         port: httpPort,
         allow_origin: '*',
         mediaroot: './media',
-        static: './public'
+        static: path.join(__dirname, 'public')
     }
 };
 
@@ -23,7 +26,7 @@ var nms = new NodeMediaServer(config)
 nms.run();
 
 console.log("=========================================");
-console.log("🎬 RTMP Server is running!");
-console.log("RTMP Port: " + (process.env.RTMP_PORT || 1935));
-console.log("HTTP Port: " + (process.env.PORT || 8000));
+console.log("🎬 DIANPRO SERVER STATUS");
+console.log("RTMP (Video In)  : " + rtmpPort);
+console.log("HTTP (Web/Watch) : " + httpPort);
 console.log("=========================================");
